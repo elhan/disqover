@@ -66,10 +66,11 @@ app.get('/threads/top', function(req, res) {
     } else {
       data = JSON.parse(data);
       data.response = _.sortBy(data.response, function(thread){return thread.posts+thread.likes+thread.dislikes+thread.reactions;});
-      //console.log(data.response.slice(91,100).reverse());
+      console.log(data.response);
+      //console.log(data.response.slice(90,100).reverse());
       
       //get the links from the top 10 articles
-      _.each(data.response.slice(90,100).reverse(), function(article) {
+      _.each(data.response, function(article) {
       
       	//get the article for each link
       	request(article.link,  function (error, response, body) {
@@ -109,7 +110,11 @@ app.get('/threads/avg', function(req, res) {
 	});
 });
 
-
+/*
+app.get('posts/top', function(req, res) {
+  disqus.request(''
+});
+*/
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
