@@ -1,0 +1,27 @@
+.container {
+	font-family: ff-tisa-web-pro, Georgia, Cambria, 'Times New Roman', Times, serif;
+	text-align: center;
+	color: rgb(51, 51, 50);
+	font-size: 18px;
+}
+
+.header {
+	margin-bottom: 20px;
+}
+
+#title {
+	margin-bottom: 40px;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 32px;
+	font-weight: bold;
+}
+
+li {
+	margin-top: 20px;
+	position: relative;
+	border-bottom: 1px solid #e4e4e4
+}

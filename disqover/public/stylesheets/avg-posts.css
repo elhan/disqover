@@ -1,0 +1,34 @@
+.container {
+	font-family: ff-tisa-web-pro, Georgia, Cambria, 'Times New Roman', Times, serif;
+	text-align: center;
+	color: rgb(51, 51, 50);
+	font-size: 18px;
+}
+
+h1 {
+	font-size: 32px;
+	font-weight: bold;
+}
+
+
+#title {
+	font-size: 28px;
+}
+
+#sum, #avg {
+	color: #636363;
+}
+
+#sum span, #avg span {
+	font-size: 32px;
+	color: rgb(51, 51, 50);
+}
+
+#expl {
+	font-size: 16px;
+	color: rgb(179, 179, 177);
+}
+
+#data-div {
+	margin-top: 40px;
+}

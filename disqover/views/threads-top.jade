@@ -1,0 +1,25 @@
+doctype 5
+html
+    head
+        title Disqover
+        link(rel='stylesheet', href='/stylesheets/threads-top.css')
+        link(rel='stylesheet', href='http://twitter.github.com/bootstrap/assets/css/bootstrap.css')
+        script(src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.2/bootstrap.min.js")
+        script(src="http://code.jquery.com/jquery-1.9.1.min.js")
+        script(src="/javascripts/threads-top.js")
+        
+    body
+        .container
+            .header
+                h1 DISQOVER
+                #expl The top 10 articles in a forum
+            #data-div
+              #title Techgear
+              ul#articles
+                each article, index in data
+                  li.article
+                    p.title <a href = #{article.link} target='_blank'>#{article.title}</a>
+                    .text #{article.text}
+                    .stats
+                      <span class='posts'> posts: <span class='value'> #{article.numPosts}</span>
+                      <span class='votes'> posts: <span class='value'> #{article.votes}</span>

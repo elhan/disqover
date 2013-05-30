@@ -1,0 +1,25 @@
+doctype 5
+html
+    head
+        title Disqover
+        link(rel='stylesheet', href='/stylesheets/users-top.css')
+        link(rel='stylesheet', href='http://twitter.github.com/bootstrap/assets/css/bootstrap.css')
+        script(src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.2/bootstrap.min.js")
+        script(src="http://code.jquery.com/jquery-1.9.1.min.js")
+        
+    body
+        .container
+            .header
+                h1 DISQOVER
+                #expl The 10 most active users in a community
+            #data-div
+              #title news247gr
+              ul#users
+                each user, index in data
+                  li.user
+                    p.profile <img src=#{user.avatar.small.permalink}></img>
+                    .text <a href = #{user.profileUrl} target='_blank'>#{user.name}</a>
+                    .stats
+                      <span class='posts'> posts: <span class='value'> #{user.posts}</span>
+                      <span class='reactions'> reactions: <span class='value'> #{user.reactions}</span>
+                      <span class='joined'> joined at: <span class='date'> #{user.joinedAt}</span>
