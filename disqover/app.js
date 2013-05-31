@@ -4,31 +4,22 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
   , http = require('http')
   , Disqus = require('disqus')
-  , credentials = require('./credentials.js')
-  , users = require('./users.js')
   , _ = require('underscore')
   , path = require('path')
+  , request = require('request')
   , Readability = require("readabilitySAX/readabilitySAX.js")
   , Parser = require("readabilitySAX/node_modules/htmlparser2/lib/Parser.js")
   , readable = new Readability({})
   , parser = new Parser(readable, {})
-  , request = require('request');
+  , credentials = require('./credentials.js')
+  , auxiliary = require('./auxiliary.js')
+  , users = require('./users.js')
+  , routes = require('./routes')
+  , articles = require('./routes/articles');
 
 var app = express();
-var posts = [];
-var sum = 0;
-var avg = 0;
-var topThreads = [];
-var noHTML = /(<([^>]+)>)/ig; // regex for removing HTML tags
-
-var disqus = new Disqus({
-    api_secret : credentials.api_secret,
-    api_key : credentials.api_key,
-    access_token : credentials.access_token
-});
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -46,12 +37,75 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+var posts = [];
+var sum = 0;
+var avg = 0;
+var threads = [];
+var topThreads = [];
+var cursor = {};
+var noHTML = /(<([^>]+)>)/ig; // regex for removing HTML tags
+
+var disqus = new Disqus({
+    api_secret : credentials.api_secret,
+    api_key : credentials.api_key,
+    access_token : credentials.access_token
+});
+
 app.get('/', routes.index);
 
 app.get('/users/top', function(req, res) {
   var topUsers = _.sortBy(users, function(users){return users.numPosts}).slice(90,100).reverse();
   res.render('users-top', {data: topUsers });
   //res.render('avg-posts', { data: {forum: req.query.forum, posts: posts.length, avg: avg} });
+});
+
+
+/* Finds threads for a given forum, fetches it's articles and stores them in the database.
+ * Supports pagination.
+ */
+app.get('/threads', function(req, res) {
+  
+  //define limit per call, and number of calls
+  var limit = 0;
+  var calls = 0;
+  if(req.query.limit <= 100) {
+    limit = req.query.limit;
+    calls = 1;
+  } else {
+    limit = 100;
+    calls = auxiliary.calculateCalls(req.query.limit);
+  }
+  
+  if(req.query.limit > 950) {
+    console.log('Limit exceeds api quota');
+  } else {
+  
+  	for(var i=0; i<calls; i++) {
+	  disqus.request('threads/list', { forum: req.query.forum, cursor: cursor, limit: limit }, function(data) {
+	    if (data.error) {
+	      console.log('Something went wrong...');
+	    } else {
+	      data = JSON.parse(data);
+	      //update cursor
+	      cursor = data.cursor.next;
+	      //update limit
+	      if(calls*100-req.query.limit<100)
+	      limit = calls*100-req.query.limit;
+	      _.each(data.response, function(article) {
+	      	//get the article for each link
+		      	request(article.link,  function (error, response, body) {
+		    	  if (!error && response.statusCode == 200) {
+		      		parser.write(body);
+		      		//store article in database then reset parser
+		      		articles.addArticle({ 'title': article.title, 'link': article.link, 'text': readable.getArticle().html.replace(noHTML, "").replace(/\s{2,}/g, ' ')});
+		      		parser.reset();
+		    	  } 
+		  		});
+	      });
+		}
+	  });
+	}//for
+	}//else
 });
 
 
