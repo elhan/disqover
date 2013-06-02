@@ -6,8 +6,8 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , users = require('./users.js')
   , routes = require('./routes')
+  , users = require('./routes/users.js')
   , threads = require('./routes/threads');
 
 var app = express();
@@ -30,29 +30,29 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 
-//TODO - implement this properly
-app.get('/users/top', function(req, res) {
-  var topUsers = _.sortBy(users, function(users){return users.numPosts}).slice(90,100).reverse();
-  res.render('users-top', {data: topUsers });
-});
+
+app.get('/users', users.getUsers);
 
 
 /* Finds threads for a given forum, fetches it's articles and stores them in the database.
  * Supports pagination.
  */
-app.get('/threads', threads.getArticles);
+
+app.get('/threads', threads.getArticles); 
 
 
 /* Returns the top 10 threads in a forum. The forum name is passed as the 'forum'
  * parameter in the request. The sum of threads to be examined is passed as
  * the 'limit' parameter.
  */
+
 app.get('/threads/top', threads.topThreads);
 
 
 /* Returns the post per thread ratio for a forum. The forum name is
  * passed as the 'forum' parameter in the request.
  */
+
 app.get('/threads/avg', threads.avgPostsPerThread);
 
 

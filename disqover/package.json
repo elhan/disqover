@@ -1,12 +1,21 @@
 {
   "name": "disqover",
   "version": "0.0.1",
+  "repository": {
+	    "type": "git",
+	    "url": "https://github.com/KPouianou/clearstream.git"
+  },
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
     "express": "3.2.5",
-    "jade": "*"
+    "jade": "*",
+    "mongodb": "*",
+    "disqus": "*",
+    "request": "*",
+    "underscore": "*",
+    "readabilitySAX": "*"
   }
 }

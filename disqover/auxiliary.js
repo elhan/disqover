@@ -5,4 +5,4 @@ exports.calculateCalls = function(limit) {
     limit -= 100;
   }
   return calls++;
-}
+};
