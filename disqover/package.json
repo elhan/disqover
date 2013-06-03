@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "repository": {
 	    "type": "git",
-	    "url": "https://github.com/KPouianou/clearstream.git"
+	    "url": "https://github.com/KPouianou/disqover.git"
   },
   "private": true,
   "scripts": {
